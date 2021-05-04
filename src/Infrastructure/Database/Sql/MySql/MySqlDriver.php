@@ -5,15 +5,24 @@ namespace Fira\Infrastructure\Database\Sql\Mysql;
 
 
 use Fira\Infrastructure\Database\Sql\AbstractSqlDriver;
+require('/app/src/Infrastructure/Database/Sql/AbstractSqlDriver.php');
 use mysqli;
 use RuntimeException;
 
-class MySqlDriver extends AbstractSqlDriver
+class MySqlDriver
 {
     public function __construct(string $host, string $username, string $password, string $dbName, int $port)
     {
         $this->connection = new mysqli($host, $username, $password, $dbName, $port);
         $this->connection->select_db($dbName);
+    }
+    public function checkConnection() {
+        if ($this->connection->connect_error) {
+            return(false);
+          }
+          else {
+              return(true);
+          }
     }
 
     public function getRowById(int $id, string $table): array
