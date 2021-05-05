@@ -46,5 +46,7 @@ final class DependencyContainer
         if (!isset(self::$dependencies['UserRepo'])) {
             self::$dependencies['UserRepo'] = new \Fira\Infrastructure\Database\Sql\Mysql\UserRepository();
         }
+
+        return self::$dependencies['UserRepo'];
     }
 }

@@ -4,6 +4,7 @@ namespace Fira\Domain\UseCase;
 
 use Fira\Domain\Entity\LocationEntity;
 use \Fira\Domain\Repository\LocationRepository;
+use Webmozart\Assert\Assert;
 
 class DeleteLocationUC implements UseCaseInterface
 {
@@ -19,11 +20,12 @@ class DeleteLocationUC implements UseCaseInterface
 
     public function validate(): void
     {
-        // Nothing to do.
+        Assert::notEmpty($this->entity->getId(), 'ID should not be empty!');
     }
 
     public function execute(): string
     {
+        $this->validate();
         return($this->repo->delete($this->entity->getId()));
     }
 }

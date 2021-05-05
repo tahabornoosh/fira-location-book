@@ -57,10 +57,10 @@ class LocationController extends BaseController
     public function deleteAction(Request $request, Response $response): Response
     {
         $input = json_decode($request->getBody()->getContents(), true);
-        $enitiy = new LocationEntity();
-        $enitiy->setId($input['id']);
-        $createUC = new deleteLocationUC(DependencyContainer::getLocationRepository(), $enitiy);
         try {
+            $enitiy = new LocationEntity();
+            $enitiy->setId($input['id']);
+            $createUC = new deleteLocationUC(DependencyContainer::getLocationRepository(), $enitiy);
             $locationEntity = $createUC->execute();
             return $this->jsonResponse([
                 'status' => 'ok',

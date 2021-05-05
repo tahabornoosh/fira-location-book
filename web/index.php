@@ -19,8 +19,7 @@ $app->get('/doc', IndexController::class.':docAction');
 
 $app->get('/location', LocationController::class.':indexAction')->add(new AuthMiddleware());
 $app->post('/location/create', LocationController::class.':createAction')->add(new AuthMiddleware());
-$app->post('/location/delete', LocationController::class.':deleteAction');
+$app->post('/location/delete', LocationController::class.':deleteAction')->add(new AuthMiddleware());
 
-$app->get('/gettoken', GetTokenController::class.':indexAction');
 
 $app->run();

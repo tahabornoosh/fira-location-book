@@ -20,19 +20,25 @@ class AuthController extends BaseController
             ->setName($input['name'] ?? null)
             ->setFamily($input['family'] ?? null)
             ->setEmail($input['email'] ?? null)
-            ->setPassword($input['password'] ?? null)
-            ->execute();
-
-        return $this->jsonResponse((new UserObjectView($userEntity))->getData(), 200, $response);
+            ->setPassword($input['password'] ?? null);
+        try {
+            $uc->execute();
+            return $this->jsonResponse((new UserObjectView($userEntity))->getData(), 200, $response);
+        }
+        catch (InvalidArgumentException $exception) {
+            return $this->jsonResponse([
+                'status' => 'faild',
+                'error' => $exception->getMessage()
+            ], 400, $response);
+        }
     }
 
     public function getAccessTokenAction(Request $request, Response $response): Response
     {
         $input = $this->getRequestInputAsArray($request);
         $uc = new GetAccessTokenByUserCredentialUC(DependencyContainer::getUserRepository());
-        $uc
-            ->setEmail($input['email'] ?? null)
-            ->setPassword($input['password'] ?? null);
+        $uc->setEmail($input['email'] ?? null);
+        $uc->setPasswd($input['password'] ?? null);
 
         try {
             $accessToken = $uc->execute();
@@ -41,7 +47,10 @@ class AuthController extends BaseController
                 'token' => $accessToken
             ], 200, $response);
         } catch (InvalidArgumentException $exception) {
-            // Handle error conditions.
+            return $this->jsonResponse([
+                'status' => 'faild',
+                'error' => $exception->getMessage()
+            ], 400, $response);
         }
     }
 }

@@ -18,11 +18,12 @@ class UserRepository implements \Fira\Domain\Repository\UserRepository
     protected ?string $description = null;
     public function getByEmail(string $email): ?UserEntity
     {
-        $rowData = DependencyContainer::getSqlDriver()->select('*', 'location', 'email='.$email);
+        $rowData = DependencyContainer::getSqlDriver()->select(array('*'), 'users', 'email="'.$email.'"');
         $entity = new UserEntity();
-        while($row = $rowData) {
-            echo "id: " . $row["id"]. " - Name: " . $row["firstname"]. " " . $row["lastname"]. "<br>";
-          }
+            $entity->setName($rowData['name']);
+            $entity->setFamily($rowData['fname']);
+            $entity->setEmail($rowData['email']);
+            $entity->setPasswordHash($rowData['passhash']);
 
         return $entity;
     }
@@ -66,7 +67,7 @@ class UserRepository implements \Fira\Domain\Repository\UserRepository
 
     public function delete(int $id): void
     {
-        DependencyContainer::getSqlDriver()->delete('DELETE FROM Location WHERE id=$id');
+        DependencyContainer::getSqlDriver()->delete("DELETE FROM users WHERE id=$id");
     }
 
     public function getNextid(): int

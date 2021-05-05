@@ -40,6 +40,9 @@ class MySqlDriver
         if (empty($field)) {
             throw new RuntimeException('Fields should not be empty');
         }
+        if (empty($table)) {
+            throw new RuntimeException('Table should not be empty');
+        }
 
         if (isset($field[0]) && $field[0] === '*') {
             $fieldString = '*';
@@ -47,11 +50,15 @@ class MySqlDriver
             $fieldString = implode(',', $field);
         }
 
-        $query = <<<sql
-SELECT {$fieldString} FROM {$table} WHERE {$where}; 
-sql;
+        if($where === null) {
+            $RealWhere = '';
+        }
+        else {
+            $RealWhere = ' WHERE '.$where;
+        }
+        $query = "SELECT {$fieldString} FROM {$table} {$RealWhere};";
 
-        $mysqlResult = $this->connection->query($query);
+        $mysqlResult = $this->connection->query($query) OR throw new RuntimeException($query.' ');
         return $mysqlResult->fetch_array();
     }
 
@@ -68,6 +75,9 @@ sql;
 
     public function delete(string $query): bool
     {
+        if (empty($query)) {
+            throw new RuntimeException('Empty Query');
+        }
         $sql = $query;
 
         if ($this->connection->query($sql) === TRUE) {
@@ -79,6 +89,9 @@ sql;
 
     public function insert(string $query): bool
     {
+        if (empty($query)) {
+            throw new RuntimeException('Empty Query');
+        }
         $sql = $query;
 
         if ($this->connection->query($sql) === TRUE) {

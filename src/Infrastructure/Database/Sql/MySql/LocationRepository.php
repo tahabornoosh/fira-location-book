@@ -67,10 +67,10 @@ class LocationRepository implements \Fira\Domain\Repository\LocationRepository
         // TODO: Implement getByIds() method.
     }
 
-    public function delete(int $id): string
+    public function delete(int $id): void
     {
         $q = DependencyContainer::getSqlDriver()->delete("DELETE FROM Location WHERE id={$id}");
-        return('DELETE FROM Location WHERE id=$id');
+        //return('DELETE FROM Location WHERE id=$id');
     }
 
     public function getNextid(): int

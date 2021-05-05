@@ -13,7 +13,7 @@ class GetAccessTokenByUserCredentialUC implements UseCaseInterface
     const JWT_KEY = 'lgcyEO^Rs$FfKrpKhy!bAa@jEYEPFK@!XrWOAas$@yfZJI9f!K';
 
     private UserRepository $userRepo;
-    private ?UserEntity $userEntity;
+    private ?UserEntity $userEntity = null;
 
     private ?string $email = null;
     private ?string $password = null;
@@ -28,16 +28,7 @@ class GetAccessTokenByUserCredentialUC implements UseCaseInterface
         Assert::email($this->email);
         Assert::string($this->password);
         Assert::notNull($this->getUserEntity(), 'User not exist!');
-        Assert::true($this->isValidPassword(), 'Your is password is wrong.');
-    }
-
-    private function getUserEntity(): ?UserEntity
-    {
-        if ($this->userEntity === null) {
-            $this->userEntity = $this->userRepo->getByEmail($this->email);
-        }
-
-        return $this->userEntity;
+        Assert::true($this->isValidPassword(), 'Your password is wrong.');
     }
 
     private function isValidPassword(): bool
@@ -47,12 +38,19 @@ class GetAccessTokenByUserCredentialUC implements UseCaseInterface
             return false;
         }
 
-        return password_verify($this->password, $userEntity->getPasswordHash());
+        if(md5($this->password) == $userEntity->getPasswordHash()) {
+            return(TRUE);
+        }
+        else {
+            return(FALSE);
+        }
     }
 
     public function execute(): string
     {
         $this->validate();
+        $entity = $this->getUserEntity();
+
 
         return JWT::encode([
             "iss" => "http://example.org",
@@ -60,7 +58,7 @@ class GetAccessTokenByUserCredentialUC implements UseCaseInterface
             "iat" => time(),
             "nbf" => time() + (30 * 12 * 60 * 60),
             "data" => [
-                'userId' => $this->getUserEntity()->getId()
+                'userId' => $entity->getId()
             ]
         ], self::JWT_KEY);
     }
@@ -81,10 +79,18 @@ class GetAccessTokenByUserCredentialUC implements UseCaseInterface
      *
      * @return GetAccessTokenByUserCredentialUC
      */
-    public function setPassword(?string $password): GetAccessTokenByUserCredentialUC
+    public function setPasswd(?string $password): GetAccessTokenByUserCredentialUC
     {
         $this->password = $password;
         return $this;
+    }
+    private function getUserEntity(): ?UserEntity
+    {
+        if ($this->userEntity === null) {
+            $this->userEntity = $this->userRepo->getByEmail($this->email);
+        }
+
+        return $this->userEntity;
     }
 
 
