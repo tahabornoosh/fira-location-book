@@ -2,6 +2,8 @@
 
 namespace Fira\App\View\Location;
 
+require('/app/src/App/View/AbstractListView.php');
+
 use Fira\Domain\Repository\LocationRepository;
 use Slim\Psr7\Request;
 use Webmozart\Assert\Assert;

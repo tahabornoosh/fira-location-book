@@ -23,10 +23,10 @@ final class DependencyContainer
         return self::$dependencies['authenticatedUserEntity'] ?? null;
     }
 
-    public static function getSqlDriver(): AbstractSqlDriver
+    public static function getSqlDriver(): MySqlDriver
     {
         if (!isset(self::$dependencies['sqlDriver'])) {
-            self::$dependencies['sqlDriver'] = new MysqlDriver('mysqlHost', 'username', 'password', 'fira_location', 15456);
+            self::$dependencies['sqlDriver'] = new MysqlDriver('192.168.43.2', 'root', '', 'fira-location', 3306);
         }
 
         return self::$dependencies['sqlDriver'];
@@ -43,6 +43,8 @@ final class DependencyContainer
 
     public static function getUserRepository(): UserRepository
     {
-        throw new RuntimeException('Not implemented yet!');
+        if (!isset(self::$dependencies['UserRepo'])) {
+            self::$dependencies['UserRepo'] = new \Fira\Infrastructure\Database\Sql\Mysql\UserRepository();
+        }
     }
 }

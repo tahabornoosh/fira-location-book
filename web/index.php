@@ -3,6 +3,7 @@
 use Fira\App\Controller\AuthController;
 use Fira\App\Controller\IndexController;
 use Fira\App\Controller\LocationController;
+use Fira\App\Controller\GetTokenController;
 use Fira\App\Middleware\AuthMiddleware;
 use Slim\Factory\AppFactory;
 
@@ -17,6 +18,9 @@ $app->get('/', IndexController::class.':indexAction');
 $app->get('/doc', IndexController::class.':docAction');
 
 $app->get('/location', LocationController::class.':indexAction')->add(new AuthMiddleware());
-$app->post('/location', LocationController::class.':createAction')->add(new AuthMiddleware());
+$app->post('/location/create', LocationController::class.':createAction')->add(new AuthMiddleware());
+$app->post('/location/delete', LocationController::class.':deleteAction');
+
+$app->get('/gettoken', GetTokenController::class.':indexAction');
 
 $app->run();

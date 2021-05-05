@@ -9,6 +9,7 @@ class DeleteLocationUC implements UseCaseInterface
 {
     private LocationEntity $entity;
     private LocationRepository $repo;
+    private string $w; 
 
     public function __construct(LocationRepository $locationRepository, LocationEntity $locationEntity)
     {
@@ -21,8 +22,8 @@ class DeleteLocationUC implements UseCaseInterface
         // Nothing to do.
     }
 
-    public function execute()
+    public function execute(): string
     {
-        $this->repo->delete($this->entity->getId());
+        return($this->repo->delete($this->entity->getId()));
     }
 }

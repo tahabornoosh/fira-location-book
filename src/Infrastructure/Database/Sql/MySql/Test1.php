@@ -1,7 +1,6 @@
 <?php
-
-
 namespace Fira\Infrastructure\Database\Sql\Mysql;
+
 
 
 use Fira\Infrastructure\Database\Sql\AbstractSqlDriver;
@@ -84,7 +83,16 @@ sql;
         if ($this->connection->query($sql) === TRUE) {
             return(TRUE);
         } else {
-            return(FALSE);
+            return($this->connection->error);
         }
     }
+}
+
+$repo = new MysqlDriver('192.168.43.2', 'root', '', 'test', 3306);
+$test = $repo->insert('INSERT INTO location(name, latitude, longitude, desk, cat) VALUES ("a", 11, 1, "salam", 1)');
+if($test === true) {
+    echo('true');
+}
+else {
+    echo($test);
 }

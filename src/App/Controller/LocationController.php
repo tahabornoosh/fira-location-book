@@ -5,7 +5,9 @@ namespace Fira\App\Controller;
 use Fira\App\DependencyContainer;
 use Fira\App\View\Location\LocationListView;
 use Fira\Domain\UseCase\CreateLocationUC;
+use Fira\Domain\UseCase\DeleteLocationUC;
 use InvalidArgumentException;
+use Fira\Domain\Entity\LocationEntity;
 use Slim\Psr7\Request;
 use Slim\Psr7\Response;
 
@@ -43,6 +45,26 @@ class LocationController extends BaseController
                     'latitude' => $locationEntity->getLatitude(),
                     'longitude' => $locationEntity->getLongitude(),
                 ]
+            ], 200, $response);
+        } catch (InvalidArgumentException $exception) {
+            return $this->jsonResponse([
+                'status' => 'failed',
+                'data' => $exception->getMessage(),
+            ], 400, $response);
+        }
+    }
+    
+    public function deleteAction(Request $request, Response $response): Response
+    {
+        $input = json_decode($request->getBody()->getContents(), true);
+        $enitiy = new LocationEntity();
+        $enitiy->setId($input['id']);
+        $createUC = new deleteLocationUC(DependencyContainer::getLocationRepository(), $enitiy);
+        try {
+            $locationEntity = $createUC->execute();
+            return $this->jsonResponse([
+                'status' => 'ok',
+                'ok' => $locationEntity,
             ], 200, $response);
         } catch (InvalidArgumentException $exception) {
             return $this->jsonResponse([

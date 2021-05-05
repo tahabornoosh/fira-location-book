@@ -14,7 +14,7 @@ interface Repository
 
     public function getByIds(array $id): array;
 
-    public function delete(int $id): void;
+    public function delete(int $id): string;
 
     public function getNextid(): int;
 }

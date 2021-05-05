@@ -5,26 +5,26 @@ namespace Fira\Infrastructure\Database\Sql\Mysql;
 use DateTimeImmutable;
 use Fira\App\DependencyContainer;
 use Fira\Domain\Entity\Entity;
-use Fira\Domain\Entity\LocationEntity;
+use Fira\Domain\Entity\UserEntity;
 use Fira\Domain\Utility\Pager;
 use Fira\Domain\Utility\Sort;
-use RuntimeException;
 
-class LocationRepository implements \Fira\Domain\Repository\LocationRepository
+class UserRepository implements \Fira\Domain\Repository\UserRepository
 {
     protected string $name;
     protected float $latitude;
     protected float $longitude;
     protected string $category;
     protected ?string $description = null;
-    public function getByName(string $name, Pager $pager, Sort $sort): array
+    public function getByEmail(string $email): ?UserEntity
     {
-        // TODO: Implement getByName() method.
-    }
+        $rowData = DependencyContainer::getSqlDriver()->select('*', 'location', 'email='.$email);
+        $entity = new UserEntity();
+        while($row = $rowData) {
+            echo "id: " . $row["id"]. " - Name: " . $row["firstname"]. " " . $row["lastname"]. "<br>";
+          }
 
-    public function getByCategory(string $category, Pager $pager, Sort $sort): array
-    {
-        // TODO: Implement getByCategory() method.
+        return $entity;
     }
 
     public function registerEntity(Entity $entity): void
@@ -39,10 +39,7 @@ class LocationRepository implements \Fira\Domain\Repository\LocationRepository
     public function save(): void
     {
         if($this->name != null) {
-        $q = DependencyContainer::getSqlDriver()->insert("INSERT INTO location(name, latitude, longitude, desk, cat) VALUES ('{$this->name}', {$this->latitude}, {$this->longitude}, '{$this->description}', {$this->category})");
-        if($q === FALSE) {
-            throw new RuntimeException('Query Error');
-        }
+        $q = DependencyContainer::getSqlDriver()->insert('INSERT INTO location(name, latitude, longitude, desk, cat) VALUES ("{$this->name}", {$this->latitude}, {$this->longitude}, "{$this->description}", {$this->category})');
         }
     }
 
@@ -67,10 +64,9 @@ class LocationRepository implements \Fira\Domain\Repository\LocationRepository
         // TODO: Implement getByIds() method.
     }
 
-    public function delete(int $id): string
+    public function delete(int $id): void
     {
-        $q = DependencyContainer::getSqlDriver()->delete("DELETE FROM Location WHERE id={$id}");
-        return('DELETE FROM Location WHERE id=$id');
+        DependencyContainer::getSqlDriver()->delete('DELETE FROM Location WHERE id=$id');
     }
 
     public function getNextid(): int

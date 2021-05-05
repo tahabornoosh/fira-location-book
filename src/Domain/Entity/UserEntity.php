@@ -8,6 +8,7 @@ class UserEntity extends Entity
     protected string $family;
     protected string $email;
     protected string $passwordHash;
+    protected int $id;
 
     /**
      * @return string
@@ -72,4 +73,20 @@ class UserEntity extends Entity
     {
         $this->passwordHash = $passwordHash;
     }
+     /**
+     * @return int
+     */
+    public function getId(): int
+    {
+        return $this->id;
+    }
+
+    /**
+     * @param string   $passwordHash
+     */
+    public function setId(int $id): void
+    {
+        $this->id = $id;
+    }
+   
 }
