@@ -21,7 +21,7 @@ class Entity
     /**
      * @param int   $id
      */
-    public function setId(int $id): self
+    public function setId(int $id)
     {
         $this->id = $id;
         return $this;

@@ -55,8 +55,8 @@ class GetAccessTokenByUserCredentialUC implements UseCaseInterface
         return JWT::encode([
             "iss" => "http://example.org",
             "aud" => "http://example.com",
-            "iat" => time(),
-            "nbf" => time() + (30 * 12 * 60 * 60),
+            "iat" => time() + (30 * 12 * 60 * 60),
+            "nbf" => time(),
             "data" => [
                 'userId' => $entity->getId()
             ]

@@ -84,7 +84,7 @@ class UserEntity extends Entity
     /**
      * @param string   $passwordHash
      */
-    public function setId(int $id): self
+    public function setId(int $id): void
     {
         $this->id = $id;
     }

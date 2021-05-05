@@ -21,18 +21,12 @@ class AuthMiddleware extends BaseMiddleware
         if (empty($jwtToken)) {
             throw new HttpForbiddenException($request,'UnAuthorized request!');
         }
-
-        try {
-            $tokenData = JWT::decode($jwtToken, GetAccessTokenByUserCredentialUC::JWT_KEY);
+            $tokenData = JWT::decode($jwtToken, GetAccessTokenByUserCredentialUC::JWT_KEY, array('HS256'));
             $userId = $tokenData['data']['userId'] ?? null;
             Assert::notNull($userId);
-
             /** @var UserEntity $userEntity */
             $userEntity = DependencyContainer::getUserRepository()->getById($userId);
             DependencyContainer::setAuthenticatedUserEntity($userEntity);
-        } catch (Exception $exception) {
-            throw new HttpForbiddenException($request,'Invalid token provided!');
-        }
     }
 
     protected function handleAfter(ServerRequestInterface $request, ResponseInterface $response): void

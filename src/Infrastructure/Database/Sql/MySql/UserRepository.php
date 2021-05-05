@@ -20,6 +20,7 @@ class UserRepository implements \Fira\Domain\Repository\UserRepository
     {
         $rowData = DependencyContainer::getSqlDriver()->select(array('*'), 'users', 'email="'.$email.'"');
         $entity = new UserEntity();
+            $entity->setId($rowData['id']);
             $entity->setName($rowData['name']);
             $entity->setFamily($rowData['fname']);
             $entity->setEmail($rowData['email']);
